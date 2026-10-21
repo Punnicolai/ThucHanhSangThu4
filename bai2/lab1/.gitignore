@@ -1,0 +1,13 @@
+.DS_Store
+gitsecure.log
+certs/
+*.pem
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+upload/
+certs/
+*.pem
+*.enc
+*.dec

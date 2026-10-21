@@ -1,0 +1,22 @@
+[
+  {
+    "type": "Use of eval",
+    "severity": "high"
+  },
+  {
+    "type": "Use of exec",
+    "severity": "high"
+  },
+  {
+    "type": "Use of os.system",
+    "severity": "high"
+  },
+  {
+    "type": "Pattern Match",
+    "severity": "medium"
+  },
+  {
+    "type": "Lint Issue",
+    "severity": "low"
+  }
+]

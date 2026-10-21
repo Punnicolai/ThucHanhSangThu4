@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "PySAST",
+          "version": "1.0.0",
+          "rules": [
+            {
+              "id": "Use of eval",
+              "shortDescription": {
+                "text": "Use of eval"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            },
+            {
+              "id": "Use of exec",
+              "shortDescription": {
+                "text": "Use of exec"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              }
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "Use of eval",
+          "level": "error",
+          "message": {
+            "text": "Use of eval() is dangerous and should be avoided."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/vulnerable_02.py"
+                },
+                "region": {
+                  "startLine": 2,
+                  "startColumn": 12
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "Use of exec",
+          "level": "error",
+          "message": {
+            "text": "Use of exec() can execute arbitrary code."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/vulnerable_02.py"
+                },
+                "region": {
+                  "startLine": 6,
+                  "startColumn": 5
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "qualityMetrics": {
+          "cyclomatic_complexity": {
+            "dangerous_eval": 1,
+            "execute_code": 1
+          },
+          "function_length": {
+            "dangerous_eval": 2,
+            "execute_code": 2
+          },
+          "maximum_nesting_depth": 1,
+          "dependency_count": 0,
+          "security_smell_count": 2,
+          "security_smell_density": 0.2
+        }
+      }
+    }
+  ]
+}

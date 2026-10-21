@@ -1,0 +1,2 @@
+-chay unit test: cd sast-tool, python -m unittest discover test
+-kiem tra thu 1 file code khong an toan:
