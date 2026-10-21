@@ -1,110 +1,110 @@
-# Bai 5 - DAST va SAST
+# Bài 5 - DAST và SAST
 
-Tai lieu nay huong dan cai dat, chay thu va xem ket qua hai cong cu phan tich bao mat trong bai 5:
+Tài liệu này hướng dẫn chạy các bước theo đúng thứ tự trong ảnh: quét mã bằng SAST, xem báo cáo SARIF, chạy DAST, rồi đẩy dự án lên GitHub.
 
-- **DAST tool**: theo doi hanh vi runtime, kiem tra bo nho/mang va chay thu trong sandbox.
-- **SAST tool**: phan tich ma Python, phat hien mot so mau khong an toan va xuat bao cao SARIF.
+## Chuẩn bị
 
-## 1. Yeu cau
-
-- Python 3.10 tro len.
-- PowerShell tren Windows (hoac terminal tuong duong).
-- VS Code la tuy chon; cai extension **SARIF Viewer** neu muon xem report trong VS Code.
-
-Mo terminal tai thu muc `bai5`:
+- Cài Python 3.10 trở lên và Git.
+- Mở PowerShell tại thư mục `bai5`:
 
 ```powershell
 cd "C:\Users\bunng\Downloads\sang thu 4\bai5"
 ```
 
-Neu ban dang o thu muc goc `sang thu 4`, chay `cd .\bai5` thay cho lenh tren.
+Nếu terminal đang ở thư mục gốc `sang thu 4`, chạy `cd .\bai5` trước.
 
-## 2. Chay DAST tool
+## 1. Chạy test và quét file SAST đầu tiên
 
-### 2.1 Cai dat dependencies
-
-```powershell
-cd .\dast-tool
-python -m pip install -r requirements.txt
-```
-
-### 2.2 Chay unit tests
-
-```powershell
-python -m unittest discover -s tests
-```
-
-Ket qua thanh cong co dang `Ran 10 tests` va `OK`.
-
-![DAST unit tests thanh cong](docs/images/dast-unit-tests.png)
-
-### 2.3 Chay phan tich runtime tren terminal
-
-```powershell
-python .\main.py
-```
-
-Chuong trinh in thong tin tien trinh, CPU, bo nho, file dang mo, thong ke mang, ket qua kiem tra va sandbox.
-
-![Ket qua chay DAST main.py](docs/images/dast-runtime-monitor.png)
-
-### 2.4 Chay Flask API (tuy chon)
-
-```powershell
-python .\app.py
-```
-
-Server chay tai `http://127.0.0.1:5000`. Cac endpoint GET gom `/api/monitor`, `/api/memory`, `/api/network`, `/api/security`; endpoint POST `/api/sandbox` nhan JSON co truong `command`. Dung server bang `Ctrl+C`.
-
-![Flask development server dang chay](docs/images/dast-flask-app.png)
-
-## 3. Chay SAST tool
-
-Mo terminal moi tai `bai5`, hoac neu dang o `dast-tool` thi chay `cd ..` de quay ve `bai5`. Sau do:
+Vào thư mục SAST, cài dependencies, chạy tests và phân tích file ví dụ:
 
 ```powershell
 cd .\sast-tool
 python -m pip install -r requirements.txt
-```
-
-### 3.1 Chay unit tests
-
-```powershell
 python -m unittest discover -s tests
-```
-
-### 3.2 Quet file mau thu nhat
-
-```powershell
 python -m sast_tool.main .\examples\vulnerable_01.py --report .\report.sarif
 ```
 
-File mau minh hoa cac mau nhu `eval`, `pickle` va chuoi password gia lap; day la ma demo, khong chay ma khong dang tin cay. Ket qua duoc ghi vao `report.sarif`.
+Tests thành công sẽ kết thúc bằng `OK`. Lệnh quét tạo/cập nhật `report.sarif` và in số lượng vấn đề tìm thấy. File ví dụ có các mẫu không an toàn để minh họa, không dùng mã này làm ví dụ cho ứng dụng thật.
 
-![Chay test va quet vulnerable_01.py](docs/images/sast-test-and-scan.png)
+![Bước 1: chạy test và quét vulnerable_01.py](docs/images/01-sast-scan.png)
 
-### 3.3 Quet file mau thu hai
+## 2. Xem báo cáo SARIF trong VS Code
+
+1. Cài extension **SARIF Viewer** trong VS Code.
+2. Mở file `sast-tool\report.sarif`.
+3. Nếu VS Code chưa tự mở báo cáo, nhấn phải vào file, chọn **Open With...** rồi chọn **SARIF Viewer**.
+
+![Bước 2: mở SARIF Viewer và xem kết quả quét](docs/images/02-sarif-viewer.png)
+
+## 3. Quét ví dụ SAST thứ hai
+
+Vẫn ở thư mục `sast-tool`, chạy:
 
 ```powershell
 python -m sast_tool.main .\examples\vulnerable_02.py --report .\report.sarif
 ```
 
-File mau nay minh hoa `eval` va `exec`. So luong canh bao hien thi phu thuoc vao noi dung file va cac rule hien tai.
+Ví dụ này minh họa `eval` và `exec`. Lệnh sẽ cập nhật `report.sarif` bằng kết quả quét file thứ hai.
 
-![Quet vulnerable_02.py](docs/images/sast-second-example.png)
+![Bước 3: quét vulnerable_02.py](docs/images/03-sast-second-example.png)
 
-### 3.4 Xem bao cao SARIF trong VS Code
+## 4. Kiểm tra trạng thái Git
 
-1. Cai extension **SARIF Viewer** tu VS Code Marketplace.
-2. Chay lenh quet SAST nhu tren de tao/cap nhat `report.sarif`.
-3. Mo `report.sarif` trong VS Code. Neu can, bam phai vao file va chon **Open With...** > **SARIF Viewer**.
-4. Xem ket qua theo finding, file va dong ma.
+Repo Git nằm ở thư mục gốc `sang thu 4`. Có thể chạy lệnh Git từ `bai5` hoặc thư mục con:
 
-![Extension SARIF Viewer va bao cao quet](docs/images/sarif-viewer-and-scan.png)
+```powershell
+git status
+git add .
+git commit -m "[add] sast tool"
+git push origin main
+```
 
-## 4. Day thay doi len GitHub
+Trong ảnh, `nothing to commit, working tree clean` nghĩa là không có thay đổi mới để commit; `Everything up-to-date` nghĩa là GitHub đã có commit mới nhất. Đây là trạng thái bình thường, không phải lỗi. Nếu vừa chạy bước quét và `report.sarif` có thay đổi, hãy kiểm tra `git status` để xác nhận file cần cập nhật.
 
-Repo Git nam o thu muc goc `sang thu 4`, nen cac lenh Git co the chay tu `bai5` hoac thu muc con cua no. Sau khi sua/tao file:
+![Bước 4: repo đang sạch và đã đồng bộ](docs/images/04-git-up-to-date.png)
+
+## 5. Chạy unit tests của DAST
+
+Quay về `bai5` rồi vào thư mục DAST:
+
+```powershell
+cd ..
+cd .\dast-tool
+python -m pip install -r requirements.txt
+python -m unittest discover -s tests
+```
+
+Kết quả thành công sẽ hiện `Ran 10 tests` và `OK`.
+
+![Bước 5: DAST unit tests thành công](docs/images/05-dast-tests.png)
+
+## 6. Chạy DAST trên terminal
+
+Tại thư mục `dast-tool`, chạy:
+
+```powershell
+python .\main.py
+```
+
+Chương trình in thông tin tiến trình hiện tại, CPU, bộ nhớ, file đang mở, thống kê mạng, kết quả kiểm tra và sandbox.
+
+![Bước 6: kết quả chạy DAST main.py](docs/images/06-dast-main.png)
+
+## 7. Khởi chạy Flask API của DAST (tùy chọn)
+
+Nếu muốn khởi chạy web API thay vì chương trình terminal:
+
+```powershell
+python .\app.py
+```
+
+Mở `http://127.0.0.1:5000` trên trình duyệt để kiểm tra server. Các endpoint có sẵn là `/api/monitor`, `/api/memory`, `/api/network`, `/api/security`; endpoint `/api/sandbox` nhận POST JSON có trường `command`. Dừng server bằng `Ctrl+C`. Đây là server phục vụ phát triển, không dùng làm server production.
+
+![Bước 7: Flask API đang chạy tại localhost](docs/images/07-dast-flask.png)
+
+## 8. Đẩy commit lên GitHub
+
+Dừng Flask bằng `Ctrl+C` nếu nó còn chạy. Sau đó, từ thư mục `dast-tool` hoặc thư mục khác bên trong repo:
 
 ```powershell
 git status
@@ -113,10 +113,8 @@ git commit -m "[add] update bai 5"
 git push origin main
 ```
 
-Neu `git status` hien `nothing to commit, working tree clean` thi khong co thay doi moi de commit. Neu push hien `Everything up-to-date` thi GitHub da co commit moi nhat; day khong phai loi.
+Ảnh cho thấy một lần push thành công tới nhánh `main`. Nếu Git báo `nothing to commit` hoặc `Everything up-to-date`, nghĩa là hiện không có commit mới cần gửi. Đừng tạo thay đổi giả chỉ để lệnh push in thêm nội dung.
 
-![Vi du push commit thanh cong](docs/images/git-push-success.png)
-
-![Khong co thay doi moi de commit la binh thuong](docs/images/git-no-new-changes.png)
+![Bước 8: push thành công lên GitHub](docs/images/08-git-push.png)
 
 Repository: [Punnicolai/ThucHanhSangThu4](https://github.com/Punnicolai/ThucHanhSangThu4)
