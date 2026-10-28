@@ -1,0 +1,51 @@
+{
+  "request": {
+    "email": "user@example.com",
+    "url": "https://8.8.8.8/",
+    "filename": "report.pdf",
+    "sql": "' OR 1=1 --",
+    "html": "<script>alert(1)</script>",
+    "token": "SYNTHETIC-DEMO-ONLY"
+  },
+  "http_status": 200,
+  "response": {
+    "email": true,
+    "filename": true,
+    "html": "&lt;script&gt;alert(1)&lt;/script&gt;",
+    "sql": "1=1",
+    "url": true
+  },
+  "masked_log": {
+    "timestamp": "2026-10-28T02:26:16.467321+00:00",
+    "level": "INFO",
+    "message": "Validation performed",
+    "data": {
+      "email": "<email_masked>",
+      "filename": "report.pdf",
+      "html": "<script>alert(1)</script>",
+      "sql": "' OR 1=1 --",
+      "token": "<redacted>",
+      "url": "https://8.8.8.8/"
+    },
+    "results": {
+      "email": true,
+      "url": true,
+      "filename": true,
+      "sql": "1=1",
+      "html": "&lt;script&gt;alert(1)&lt;/script&gt;"
+    }
+  },
+  "signature": "e1fd4502fe432228907e983903bde179763c4efddf83ff4bda457b6cf134b8e9",
+  "integrity_before_tamper": true,
+  "integrity_after_tamper": false,
+  "compressed_archives": [
+    {
+      "name": "rotation.log.1.gz",
+      "verified": true
+    },
+    {
+      "name": "rotation.log.2.gz",
+      "verified": true
+    }
+  ]
+}

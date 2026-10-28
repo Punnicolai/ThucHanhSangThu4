@@ -1,0 +1,18 @@
+{
+  "blocked_commit": {
+    "code": 1,
+    "output": "COMMIT BLOCKED by GitSecure:\n - bad.py: possible hardcoded credential (value redacted)\n - Bandit B105 LOW: staged_0.py:1\n"
+  },
+  "safe_commit": {
+    "code": 0,
+    "output": "[master (root-commit) 2419a21] demo safe code\n 1 file changed, 2 insertions(+)\n create mode 100644 bad.py\nGitSecure: All checks passed.\n"
+  },
+  "log": {
+    "timestamp": "2026-10-28T02:26:33.379241+00:00",
+    "status": "blocked",
+    "findings": [
+      "bad.py: possible hardcoded credential (value redacted)",
+      "Bandit B105 LOW: staged_0.py:1"
+    ]
+  }
+}

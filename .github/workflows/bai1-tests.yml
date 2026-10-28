@@ -1,0 +1,36 @@
+name: Bai 1 - SecureValidator GitSecure SecureLogger
+on:
+  push:
+    paths: ['bai1/**', '.github/workflows/bai1-tests.yml']
+  pull_request:
+    paths: ['bai1/**', '.github/workflows/bai1-tests.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r bai1/secure-validator-lab/requirements.txt -r bai1/requirements-dev.txt
+      - name: SecureValidator - 17 unit tests
+        working-directory: bai1/secure-validator-lab
+        run: python -m unittest discover tests -v
+      - name: SecureLogger - 6 unit tests
+        working-directory: bai1/secure_logger_lab
+        run: python -m unittest discover tests -v
+      - name: GitSecure - 7 unit tests
+        run: python -m unittest discover -s bai1/gitsecure/tests -v
+      - name: Real pre-commit - block bad commit and accept fixed commit
+        run: python bai1/tools/hook_demo.py
+      - name: Real API - masked JSON log rotation and tamper detection
+        run: python bai1/tools/logger_demo.py
+      - name: Bandit production modules
+        run: python -m bandit -r bai1/secure-validator-lab bai1/secure_logger_lab bai1/gitsecure -x tests
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bai1-verification-evidence
+          path: bai1/docs/evidence/
