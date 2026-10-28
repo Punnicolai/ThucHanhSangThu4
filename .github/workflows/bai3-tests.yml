@@ -28,6 +28,38 @@ jobs:
           python -c "import time,urllib.request; time.sleep(2); print(urllib.request.urlopen('http://127.0.0.1:5000/').status)"
           cd bai3/netrecon
           python cli.py --target 127.0.0.1 --ports 8080 --mode service --nmap
+      - name: Capture real NetRecon UI in Chromium
+        run: |
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium
+          python - <<'PY'
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          out = Path('bai3/docs/evidence/ui')
+          out.mkdir(parents=True, exist_ok=True)
+          with sync_playwright() as p:
+              browser = p.chromium.launch()
+              page = browser.new_page(viewport={'width': 1280, 'height': 960})
+              page.goto('http://127.0.0.1:5000/')
+              page.screenshot(path=str(out/'08-netrecon-form.png'), full_page=True)
+              page.get_by_label('Ports', exact=True).fill('8080,8443')
+              page.get_by_role('button', name='Scan', exact=True).click()
+              page.get_by_role('heading', name='Kết quả: 127.0.0.1').wait_for()
+              page.screenshot(path=str(out/'09-netrecon-tcp-result.png'), full_page=True)
+              page.goto('http://127.0.0.1:5000/')
+              page.get_by_label('Ports', exact=True).fill('9999')
+              page.get_by_label('Protocol', exact=True).select_option('udp')
+              page.get_by_role('button', name='Scan', exact=True).click()
+              page.get_by_role('heading', name='Kết quả: 127.0.0.1').wait_for()
+              page.screenshot(path=str(out/'10-netrecon-udp-result.png'), full_page=True)
+              page.goto('http://127.0.0.1:5000/')
+              page.get_by_label('Target IP', exact=True).fill('192.0.2.1')
+              page.get_by_role('button', name='Scan', exact=True).click()
+              page.get_by_role('alert').wait_for()
+              page.screenshot(path=str(out/'11-netrecon-whitelist-block.png'), full_page=True)
+              browser.close()
+          print('Captured 4 screenshots from the running Flask application using real form submissions.')
+          PY
       - uses: actions/upload-artifact@v4
         with:
           name: bai3-real-verification-evidence
