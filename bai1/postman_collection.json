@@ -1,0 +1,58 @@
+{
+  "info": {
+    "name": "Lab 01 - SecureLogger validation",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:5001"
+    }
+  ],
+  "item": [
+    {
+      "name": "Valid input",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/validate",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"user@example.com\",\n  \"url\": \"https://8.8.8.8/\",\n  \"filename\": \"report.pdf\",\n  \"sql\": \"' OR 1=1 --\",\n  \"html\": \"<script>alert(1)</script>\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Invalid URL and filename",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/validate",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"user@@example..com\",\n  \"url\": \"http://127.0.0.1\",\n  \"filename\": \"../secret.txt\",\n  \"sql\": \"hello\",\n  \"html\": \"hello\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    }
+  ]
+}
