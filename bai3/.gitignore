@@ -1,0 +1,10 @@
+__pycache__/
+.venv/
+.env
+certs/
+*.key
+*.pem
+*.log
+*.eml
+room.key
+runtime/

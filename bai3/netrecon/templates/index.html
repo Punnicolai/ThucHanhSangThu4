@@ -1,0 +1,4 @@
+{% extends 'layout.html' %}{% block content %}
+<section><h2>Thông số kiểm tra</h2><p>Phạm vi mặc định: 127.0.0.0/8. Chỉ chạy trên dịch vụ do bạn quản lý.</p>
+{% if error %}<p role="alert" class="error">{{ error }}</p>{% endif %}
+<form action="/scan" method="post"><label>Target IP<input name="target" value="127.0.0.1" required></label><label>Ports<input name="ports" value="8080,8443" required></label><div class="grid"><label>Protocol<select name="protocol"><option value="tcp">TCP</option><option value="udp">UDP</option></select></label><label>Mode<select name="mode"><option value="all">all</option><option>scan</option><option>service</option><option>banner</option><option>map</option><option>vuln</option></select></label><label>Probes / giây<input name="rate" type="number" min="1" max="100" value="10"></label></div><button type="submit">Scan</button></form></section>{% endblock %}
