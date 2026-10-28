@@ -1,0 +1,7 @@
+# Copy this job into the root pipeline and change stages to [test, build, deploy].
+dependency-audit:
+  stage: test
+  image: node:22-bookworm-slim
+  script:
+    - npm ci
+    - npm audit --omit=dev --audit-level=high

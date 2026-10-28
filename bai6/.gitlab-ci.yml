@@ -1,0 +1,25 @@
+stages: [build, deploy]
+default:
+  image: node:22-bookworm-slim
+build-job:
+  stage: build
+  script:
+    - npm ci
+    - npm run build
+  artifacts:
+    paths: [build/]
+    expire_in: 7 days
+pages:
+  stage: deploy
+  needs:
+    - job: build-job
+      artifacts: true
+  script:
+    - mv build public
+    - test -s public/index.html
+  pages:
+    publish: public
+  artifacts:
+    paths: [public/]
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'

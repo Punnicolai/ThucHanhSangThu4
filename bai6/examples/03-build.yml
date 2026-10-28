@@ -1,0 +1,7 @@
+build-job:
+  image: node:22-bookworm-slim
+  script:
+    - npm ci
+    - npm run build
+  artifacts:
+    paths: [build/]
